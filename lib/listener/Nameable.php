@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Listener for the Signable behavior which automatically sets the created_by
+ * Listener for the Nameable behavior which automatically sets the created_by
  * and updated_by columns when a record is inserted and updated.
  *
  * @package     sfDoctrineActAsSignablePlugin
@@ -10,11 +10,11 @@
  * @author      Vitaliy Tverdokhlib <new2@ua.fm>
  * @author      Tomasz Ducin <tomasz.ducin@gmail.com>
  */
-class Doctrine_Template_Listener_Signable extends Doctrine_Record_Listener
+class Doctrine_Template_Listener_Nameable extends Doctrine_Record_Listener
 {
 
   /**
-   * Array of Signable options
+   * Array of Nameable options
    *
    * @var array
    */
@@ -43,14 +43,14 @@ class Doctrine_Template_Listener_Signable extends Doctrine_Record_Listener
     {
       $createdName = $this->_options['created']['name'];
       if (!$event->getInvoker()->$createdName)
-        $event->getInvoker()->$createdName = $this->getUserId('created');
+        $event->getInvoker()->$createdName = $this->getUserName('created');
     }
 
     if (!$this->_options['updated']['disabled'] && $this->_options['updated']['onInsert'])
     {
       $updatedName = $this->_options['updated']['name'];
       if (!$event->getInvoker()->$updatedName)
-        $event->getInvoker()->$updatedName = $this->getUserId('updated');
+        $event->getInvoker()->$updatedName = $this->getUserName('updated');
     }
   }
 
@@ -65,7 +65,7 @@ class Doctrine_Template_Listener_Signable extends Doctrine_Record_Listener
     if (!$this->_options['updated']['disabled'])
     {
       $updatedName = $this->_options['updated']['name'];
-      if ($data = $this->getUserId('updated')){
+      if ($data = $this->getUserName('updated')){
         $event->getInvoker()->$updatedName = $data;
       }
     }
@@ -79,7 +79,7 @@ class Doctrine_Template_Listener_Signable extends Doctrine_Record_Listener
    * @param string $type.
    * @return void
    */
-  public function getUserId($type)
+  public function getUserName($type)
   {
     // null in CLI mode
     if (0 != strncasecmp(PHP_SAPI, 'cli', 3) && sfConfig::get('sf_environment') != 'cli')
@@ -93,18 +93,8 @@ class Doctrine_Template_Listener_Signable extends Doctrine_Record_Listener
       {
         switch ($options['type'])
         {
-          case 'integer':
-            if (class_exists('sfGuardUser'))
-            {
-              return sfContext::getInstance()->getUser()->getAttribute('user_id', null, 'sfGuardSecurityUser');
-            }
-            else
-            {
-              return sfContext::getInstance()->getUser()->getId();
-            }
-            break;
           case 'string':
-            return sfContext::getInstance()->getUser()->getUsername();
+            return sfContext::getInstance()->getUser()->getName();
             break;
           default:
             return 'n/a';

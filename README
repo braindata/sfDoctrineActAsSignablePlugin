@@ -21,6 +21,10 @@ or by using the default symfony plugin install command:
 Usage
 =====
 
+Update Name References
+
+php symfony signable:sync --env=test --models=Order,OrderItem,OrderComment,OrderPosition,OrderExchange
+
 Add the desired columns to your schema.yml for the tables you want to be signed.
 You can use a string or an int type, the behavior will automatically detect the
 type and store the corresponding information depending on this type (for a
