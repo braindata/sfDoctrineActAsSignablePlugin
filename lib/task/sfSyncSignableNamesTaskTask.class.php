@@ -45,7 +45,8 @@ class sfSyncSignableNamesTask extends sfBaseTask
         $q = $table->createQuery('o');
         $q->leftJoin('o.Creator c');
         $q->leftJoin('o.Updator u');
-        $items = $q->execute();
+        $q->orderBy('o.id DESC');
+        $items = $q->execute(array(), Doctrine_Core::HYDRATE_ON_DEMAND);
 
         foreach ($items as $item){
           if ($item->getCreatedBy() && $user = $item->getCreator()){
