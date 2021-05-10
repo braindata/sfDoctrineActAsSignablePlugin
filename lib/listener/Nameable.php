@@ -42,14 +42,14 @@ class Doctrine_Template_Listener_Nameable extends Doctrine_Record_Listener
     if (!$this->_options['created']['disabled'])
     {
       $createdName = $this->_options['created']['name'];
-      if (!$event->getInvoker()->$createdName)
+      if (!$event->getInvoker()->$createdName OR $event->getInvoker()->$createdName == '-')
         $event->getInvoker()->$createdName = $this->getUserName('created');
     }
 
     if (!$this->_options['updated']['disabled'] && $this->_options['updated']['onInsert'])
     {
       $updatedName = $this->_options['updated']['name'];
-      if (!$event->getInvoker()->$updatedName)
+      if (!$event->getInvoker()->$updatedName OR $event->getInvoker()->$updatedName == '-')
         $event->getInvoker()->$updatedName = $this->getUserName('updated');
     }
   }
